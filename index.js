@@ -37,14 +37,12 @@ bitqueryConnection.on("message", (data) => {
                     where: {
                         BalanceUpdate: {
                             Address: {
-                                is: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                                is: "${process.env.ADDRESS}"
                             }
                         }
                     }
                 ) {
-                    BalanceUpdate {
-                        AmountInUSD
-                    }
+                    sum(of: BalanceUpdate_AmountInUSD)
                 }
             }
         }`,
