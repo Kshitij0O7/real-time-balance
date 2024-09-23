@@ -39,7 +39,8 @@ bitqueryConnection.on("message", async (data) => {
                             Address: {
                                 is: "${process.env.ADDRESS}"
                             }
-                        }
+                        }, 
+                        Currency: {SmartContract: {is: "0x"}}
                     }
                 ) {
                     BalanceUpdate {
