@@ -7,8 +7,6 @@ let data = JSON.stringify({
    "variables": "{}"
 });
 
-console.log(data)
-
 let config = {
    method: 'post',
    maxBodyLength: Infinity,
@@ -24,14 +22,14 @@ let config = {
 const getBalance = async (config) => {
     try {
         const response = await axios.request(config);
-        console.log(response.data.data.EVM.BalanceUpdates[0].sum)
-        // return response.data.data.EVM.BalanceUpdates[0].sum;        
+        // console.log(response.data.data.EVM.BalanceUpdates[0].sum)
+        return response.data.data.EVM.BalanceUpdates[0].sum;        
     } catch (error) {
         return error;
     }
 
 }
 
-getBalance(config)
+// getBalance(config)
 
-// module.exports = {getBalance, config};
+module.exports = {getBalance, config};
