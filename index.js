@@ -4,7 +4,7 @@ const {getBalance, config} = require('./balance.js')
 require('dotenv').config()
 
 const bitqueryConnection = new WebSocket(
-  "wss://streaming.bitquery.io/eap?token=" + process.env.AUTH_TOKEN,
+  "wss://streaming.bitquery.io/graphql?token=" + process.env.AUTH_TOKEN,
   ["graphql-ws"],
 );
 
@@ -16,10 +16,10 @@ bitqueryConnection.on("open", () => {
   bitqueryConnection.send(initMessage);
 });
 
-bitqueryConnection.on("message", (data) => {
+bitqueryConnection.on("message", async (data) => {
   const response = JSON.parse(data);
-
-  const latestBalance = getBalance(config); 
+  
+  const latestBalance = await getBalance(config); 
 
   // Handle connection acknowledgment (connection_ack)
   if (response.type === "connection_ack") {
@@ -42,7 +42,9 @@ bitqueryConnection.on("message", (data) => {
                         }
                     }
                 ) {
-                    sum(of: BalanceUpdate_AmountInUSD)
+                    BalanceUpdate {
+                        AmountInUSD
+                    }
                 }
             }
         }`,
@@ -55,7 +57,15 @@ bitqueryConnection.on("message", (data) => {
 
   // Handle received data
   if (response.type === "data") {
-    console.log("Received data from Bitquery: ", response.payload.data);
+    console.log("Received data from Bitquery: ");
+    const updates = response.payload.data.EVM.BalanceUpdates
+    let currentBalance = parseFloat(latestBalance);
+    // console.log(currentBalance);
+    console.log(updates[0].BalanceUpdate.AmountInUSD)
+    for(let i in updates){
+        currentBalance += parseFloat(updates[i].BalanceUpdate.AmountInUSD);
+        console.log(currentBalance, "\n")
+    }
   }
 
   // Handle keep-alive messages (ka)
