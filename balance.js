@@ -1,8 +1,13 @@
 const axios = require('axios');
+
+require('dotenv').config()
+
 let data = JSON.stringify({
    "query": `{\n  EVM(dataset: combined, network: eth) {\n    BalanceUpdates(\n      where: {BalanceUpdate: {Address: {is: \"${process.env.ADDRESS}\"}}}\n    ) {\n      sum(of: BalanceUpdate_AmountInUSD)\n    }\n  }\n}\n`,
    "variables": "{}"
 });
+
+console.log(data)
 
 let config = {
    method: 'post',
@@ -19,11 +24,14 @@ let config = {
 const getBalance = async (config) => {
     try {
         const response = await axios.request(config);
-        return response.data.data.EVM.BalanceUpdates[0].sum;        
+        console.log(response.data.data.EVM.BalanceUpdates[0].sum)
+        // return response.data.data.EVM.BalanceUpdates[0].sum;        
     } catch (error) {
         return error;
     }
 
 }
 
-module.exports = {getBalance, config};
+getBalance(config)
+
+// module.exports = {getBalance, config};
