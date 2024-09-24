@@ -57,3 +57,9 @@ npm install
 ``` cmd
 node index.js
 ```
+
+5. Check the `localhost:3000` url on the browser and enter the address you want to monitor.
+
+## Project UI Overview
+
+![Project UI](./images/image.png)

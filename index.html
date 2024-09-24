@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Balance Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input, button {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter Address to Track Balance</h1>
+    <form id="balance-form">
+        <label for="address">Ethereum Address:</label>
+        <input type="text" id="address" required>
+        <button type="submit">Track Balance</button>
+    </form>
+    <h2>Current Balance: <span id="balance">0</span> USD</h2>
+
+    <script>
+        const form = document.getElementById('balance-form');
+        const balanceDisplay = document.getElementById('balance');
+        let intervalId;
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const address = document.getElementById('address').value;
+            if (intervalId) {
+                clearInterval(intervalId); // Clear any previous intervals
+            }
+
+            // Send address to backend
+            fetch('/track-balance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ address }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Fetch balance every 10 seconds
+                    intervalId = setInterval(() => {
+                        fetch('/get-balance')
+                        .then(response => response.json())
+                        .then(data => {
+                            balanceDisplay.textContent = data.balance;
+                        });
+                    }, 10000);
+                } else {
+                    alert('Error tracking balance');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
