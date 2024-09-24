@@ -12,6 +12,25 @@
         label, input, button {
             margin: 10px 0;
         }
+        /* Spinner styles */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+            display: none;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -21,16 +40,26 @@
         <input type="text" id="address" required>
         <button type="submit">Track Balance</button>
     </form>
+    
+    <!-- Loading Spinner -->
+    <div class="spinner" id="loading-spinner"></div>
+
     <h2>Current Balance: <span id="balance">0</span> USD</h2>
 
     <script>
         const form = document.getElementById('balance-form');
         const balanceDisplay = document.getElementById('balance');
+        const spinner = document.getElementById('loading-spinner');
         let intervalId;
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             const address = document.getElementById('address').value;
+            
+            // Show loading spinner
+            spinner.style.display = 'block';
+            balanceDisplay.textContent = 'Loading...';
+
             if (intervalId) {
                 clearInterval(intervalId); // Clear any previous intervals
             }
@@ -52,10 +81,12 @@
                         .then(response => response.json())
                         .then(data => {
                             balanceDisplay.textContent = data.balance;
+                            spinner.style.display = 'none';  // Hide spinner once the balance is fetched
                         });
                     }, 10000);
                 } else {
                     alert('Error tracking balance');
+                    spinner.style.display = 'none';  // Hide spinner in case of error
                 }
             });
         });
