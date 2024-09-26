@@ -24,7 +24,7 @@ app.get('/get-balance', async (req, res) => {
     try {
         // Update the address in the config dynamically
         config.data = JSON.stringify({
-            "query": `{\n  EVM(dataset: combined, network: eth) {\n    BalanceUpdates(\n      where: {BalanceUpdate: {Address: {is: \"${currentAddress}\"}}, Currency: {SmartContract: {is: \"0x\"}}}\n    ) {\n      sum(of: BalanceUpdate_AmountInUSD)\n    }\n  }\n}\n`,
+            "query": `{\n  EVM(dataset: combined, network: eth) {\n    BalanceUpdates(\n      where: {BalanceUpdate: {Address: {is: \"${currentAddress}\"}}, Currency: {SmartContract: {is: \"0x\"}}}\n    ) {\n      sum(of: BalanceUpdate_Amount)\n    }\n  }\n}\n`,
             "variables": "{}"
         });
 
@@ -73,7 +73,7 @@ bitqueryConnection.on("message", async (data) => {
                     }
                 ) {
                     BalanceUpdate {
-                        AmountInUSD
+                        Amount
                     }
                 }
             }
