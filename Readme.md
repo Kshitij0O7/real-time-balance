@@ -13,7 +13,14 @@ For this project we will use a query to get the current balnce and a subscriptio
 {
   EVM(dataset: combined, network: eth) {
     BalanceUpdates(
-      where: {BalanceUpdate: {Address: {is: "0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad"}}}
+      where: {
+        BalanceUpdate: {
+          Address: {
+            is: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+          }
+        },
+        Currency: {SmartContract: {is: "0x"}}
+      }
     ) {
       sum(of: BalanceUpdate_Amount)
     }
@@ -29,7 +36,14 @@ For this project we will use a query to get the current balnce and a subscriptio
 subscription {
   EVM{
     BalanceUpdates(
-      where: {BalanceUpdate: {Address: {is: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"}}}
+      where: {
+        BalanceUpdate: {
+          Address: {
+            is: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+          }
+        }, 
+        Currency: {SmartContract: {is: "0x"}}
+      }
     ) {
       BalanceUpdate {
         Amount
